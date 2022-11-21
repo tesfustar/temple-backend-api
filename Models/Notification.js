@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import paginate from "mongoose-paginate-v2";
 const notificationSchema = new mongoose.Schema(
   {
     userId: {
@@ -12,7 +13,7 @@ const notificationSchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
-
+notificationSchema.plugin(paginate);
 const Notification = mongoose.model("Notification", notificationSchema);
 
 export default Notification;

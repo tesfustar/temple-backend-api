@@ -1,7 +1,7 @@
 import mongoose from 'mongoose'
 const favoriteSchema=new mongoose.Schema({
     userId:{type:String,required:true},
-    productId:[{type:mongoose.SchemaTypes.ObjectId,ref:'Products'}],
+    listingId:[{type:mongoose.SchemaTypes.ObjectId,ref:'Listings'}],
     
     
 },{timestamps:true})

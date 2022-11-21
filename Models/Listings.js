@@ -36,7 +36,9 @@ const listingsSchema = new mongoose.Schema(
     amenities: { type: [String] },
     isFeatured:{type:Boolean,default:false},
     isSoldOut:{type:Boolean,default:false},
-    address: { type: String },
+    isRequestedForAd:{type:Boolean,default:false},
+    isApproved:{type:Boolean,default:false},
+    isRejected:{type:Boolean,default:false},
   },
   { timestamps: true }
 );

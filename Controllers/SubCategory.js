@@ -42,6 +42,15 @@ export const getSingleSubCategory = async (req, res) => {
   }
 };
 
+//get all subcategory af a category
+export const getAllSubCategoryOfCategory = async (req, res) => {
+  try {
+    const subCategories = await Subcategory.find({categoryId:req.params.id});
+    res.status(200).send({ success: true, data: subCategories });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
 //update subCategory
 
 export const updateSubCategory = async (req, res) => {

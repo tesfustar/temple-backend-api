@@ -14,7 +14,7 @@ export const createCategory = async (req, res) => {
 //get Category for admin
 export const getCategoryForAdmin = async (req, res) => {
   try {
-    const categories = await Category.find().populate("subCategory");
+    const categories = await Category.find()
     res.status(200).send({ success: true, data: categories });
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -24,7 +24,7 @@ export const getCategoryForAdmin = async (req, res) => {
 //get Category for web
 export const getCategoryForUser = async (req, res) => {
   try {
-    const categories = await Category.find().populate("subCategory");
+    const categories = await Category.find()
     res.status(200).send({ success: true, data: categories });
   } catch (error) {
     res.status(500).json({ message: error.message });
