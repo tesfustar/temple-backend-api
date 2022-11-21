@@ -10,9 +10,9 @@ import category from './routes/category.js'
 // import listings from './routes/listings.js'
 // import admin from './routes/admin.js'
 // import user from './routes/user.js'
-// import notification from './routes/notification.js'
-// import banks from './routes/banks.js'
-// import favorite from './routes/favorite.js'
+import notification from './routes/notification.js'
+import banks from './routes/banks.js'
+import favorite from './routes/favorite.js'
 
 dotenv.config();
 const app = express();
@@ -34,9 +34,9 @@ app.use(express.json());
 // app.use('/api/listings',listings)
 // app.use('/api/admin',admin)
 // app.use('/api/users',user)
-// app.use('/api/notification',notification)
-// app.use('/api/banks',banks)
-// app.use('/api/favorite',favorite)
+app.use('/api/notification',notification)
+app.use('/api/banks',banks)
+app.use('/api/favorite',favorite)
 app.get("/", (req, res) => {
   res.send("successs");
 });
