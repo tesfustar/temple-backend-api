@@ -9,7 +9,7 @@ import {
   getSingleCategory,
   updateCategory,
   deleteCategory,
-} from "../Controllers/category.js";
+} from "../Controllers/Category.js";
 
 router.post("/create", createCategory);
 router.get("/admin", getCategoryForAdmin);

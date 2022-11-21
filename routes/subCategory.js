@@ -10,7 +10,7 @@ import {
   deleteSubCategory,
   getSubCategoryForAdmin,
   getAllSubCategoryOfCategory
-} from "../Controllers/subCategory.js";
+} from "../Controllers/SubCategory.js";
 
 router.post("/create", createSubCategory)
 router.get("/", getSubCategory);
