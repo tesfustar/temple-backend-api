@@ -38,7 +38,7 @@ app.use('/api/notification',notification)
 app.use('/api/banks',banks)
 app.use('/api/favorite',favorite)
 app.get("/", (req, res) => {
-  res.send("success");
+  res.send("successs");
 });
 
 const PORT = process.env.PORT || 5000;
