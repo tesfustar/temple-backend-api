@@ -28,7 +28,7 @@ app.use(cors());
 app.use(express.json());
 
 //end point apis
-app.use('/api/category',category)
+// app.use('/api/category',category)
 // app.use('/api/subcategory',subCategory)
 // app.use('/api/auth',auth)
 // app.use('/api/listings',listings)
