@@ -33,3 +33,27 @@ export const getAllStatus = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
+
+//get category detail
+
+export const getCategoryDetail=async(req,res)=>{
+  try {
+        const subCategories = await Subcategory.find({categoryId:req.params.id}).count()
+        const categoryListingsCount = await Listings.find({category:req.params.id}).count()
+        const categoryListings = await Listings.find({category:req.params.id}).populate('subCategory')
+        res.status(200).json({message:"success",subCategories,categoryListingsCount,categoryListings})
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+}
+
+export const getSubCategoryDetail=async(req,res)=>{
+  try {
+        const subcategoryListingsCount = await Listings.find({subCategory:req.params.id}).count()
+        const subCategoryListings = await Listings.find({category:req.params.id}).populate('subCategory')
+        res.status(200).json({message:"success",subcategoryListingsCount,subCategoryListings})
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+}

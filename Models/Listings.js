@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import paginate from "mongoose-paginate-v2";
 
 const listingsSchema = new mongoose.Schema(
   {
@@ -43,6 +44,7 @@ const listingsSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
+listingsSchema.plugin(paginate);
 const Listings = mongoose.model("Listings", listingsSchema);
 
 export default Listings;

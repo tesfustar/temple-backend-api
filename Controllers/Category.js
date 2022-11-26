@@ -4,6 +4,8 @@ import Category from "../Models/Category.js";
 export const createCategory = async (req, res) => {
   const newCategory = new Category(req.body);
   try {
+    const oldCategory = await Category.findOne({type:req.body.type})
+     if(oldCategory) return res.status(400).json({message:`type ${req.body.type} already exist`})
     const savedCategory = await newCategory.save();
     res.status(201).send({ success: true, data: savedCategory });
   } catch (error) {

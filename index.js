@@ -13,7 +13,7 @@ import user from './routes/user.js'
 import notification from './routes/notification.js'
 import banks from './routes/banks.js'
 import favorite from './routes/favorite.js'
-
+import userContact from './routes/userContact.js'
 dotenv.config();
 const app = express();
 
@@ -36,7 +36,12 @@ app.use('/api/admin',admin)
 app.use('/api/users',user)
 app.use('/api/notification',notification)
 app.use('/api/banks',banks)
-app.use('/api/favorite',favorite)
+app.use('/api/favorite',favorite);
+app.use('/api/contact-info',userContact)
+
+
+
+
 app.get("/", (req, res) => {
   res.send("successs");
 });

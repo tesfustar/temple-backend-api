@@ -25,7 +25,7 @@ export const getSubCategory = async (req, res) => {
 // for admin
 export const getSubCategoryForAdmin = async (req, res) => {
   try {
-    const subCategories = await Subcategory.find();
+    const subCategories = await Subcategory.find().populate('categoryId');
     res.status(200).send({ success: true, data: subCategories });
   } catch (error) {
     res.status(500).json({ message: error.message });

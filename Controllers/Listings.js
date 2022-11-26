@@ -1,6 +1,7 @@
 import Listings from "../Models/Listings.js";
 import Notification from "../Models/Notification.js";
 import User from "../Models/User.js";
+import UserContact from "../Models/UserContact.js";
 //create listings
 export const createListing = async (req, res) => {
   const newListing = new Listings(req.body);
@@ -32,7 +33,26 @@ export const getAllListings = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+//get listings for web
+export const getAllPaginatedListings = async (req, res) => {
+  const options = {
+    page: req.query.page,
+    // populate: "agents",
+    sort: { createdAt: -1 },
 
+    limit: 3,
+    collation: {
+      locale: "en",
+    },
+  };
+  try {
+    await Listings.paginate({}, options, function (err, result) {
+      res.status(200).json(result);
+    });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
 //get listings for admin
 export const getListings = async (req, res) => {
   try {
@@ -81,10 +101,18 @@ export const getSingleListing = async (req, res) => {
       .populate("userId")
       .populate("category")
       .populate("subCategory");
-      if(!listing)  res.status(400).json({message:"listing not found"})
-    const relatedListings = await Listings.find({category:listing.category})
-    const findOne = relatedListings.filter((item)=>item.title !== listing.title)
-    res.status(200).send({ success: true, data: listing, related:findOne });
+    if (!listing) res.status(400).json({ message: "listing not found" });
+    const userContact = await UserContact.findOne({ userId: listing.userId });
+    const relatedListings = await Listings.find({ category: listing.category });
+    const findOne = relatedListings.filter(
+      (item) => item.title !== listing.title
+    );
+    res.status(200).send({
+      success: true,
+      data: listing,
+      related: findOne,
+      userContact: userContact,
+    });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -102,6 +130,18 @@ export const deleteSingleListingAdmin = async (req, res) => {
   }
 };
 
+//delete own single listing
+export const deleteOwnListing = async (req, res) => {
+  try {
+    const singleListing = await Listings.findById(req.params.id);
+    if (!singleListing)
+      return res.status(404).json({ message: "listing not found" });
+    await Listings.findByIdAndDelete(req.params.id);
+    res.status(200).json({ message: "listing deleted successfully" });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
 //get featured listings for admin
 export const getAllFeaturedListingsForAdmin = async (req, res) => {
   try {
@@ -191,8 +231,60 @@ export const getOwnListingsData = async (req, res) => {
 //get own featured data
 export const getOwnFeaturedListingsData = async (req, res) => {
   try {
-    const ownFeaturedListings = await Listings.find({ userId: req.params.id,isFeatured:true });
+    const ownFeaturedListings = await Listings.find({
+      userId: req.params.id,
+      isFeatured: true,
+    });
     res.status(200).json({ success: true, data: ownFeaturedListings });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+//filter and search listings
+export const filteredListings = async (req, res) => {
+  const { min_price, max_price, title, sub_category, category, price } =
+    req.query;
+  const options = {
+    page: req.query.page,
+    // populate: "agents",
+    sort: { createdAt: -1 },
+
+    limit: 10,
+    collation: {
+      locale: "en",
+    },
+  };
+  let query = {};
+  if (title) {
+    query.title = { $regex: new RegExp(title), $options: "i" };
+  }
+  if (category) {
+    query.category = {  $eq: category };
+  }
+  if (min_price || max_price) {
+    query.price = { $gte: min_price | 0, $lte: max_price || 20000000 };
+  }
+  try {
+    await Listings.paginate(query, options, function (err, result) {
+      res.status(200).json(result);
+    });
+    console.log(query);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+//ajax live searching
+
+export const ajaxSearching = async (req, res) => {
+  const { title } = req.query;
+  try {
+    const titles = new RegExp(title, "i");
+    const foundedListings = await Listings.find({
+      title: { $regex: new RegExp("^" + title + ".*", "i") },
+    });
+    res.status(200).json({ message: "success", data: foundedListings });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
