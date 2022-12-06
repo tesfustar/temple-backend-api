@@ -21,7 +21,7 @@ const listingsSchema = new mongoose.Schema(
     priceNegotiation: { type: String,default:null},
     carDetail: {
       fuelType: { type: String },
-      carModel: { type: String },
+      // carModel: { type: String },
       condition: { type: String },
       transitionType: { type: String },
     },

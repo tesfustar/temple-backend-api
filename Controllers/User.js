@@ -137,7 +137,7 @@ export const getUserProfileInfo = async (req, res) => {
     const userFavorites = await Favorite.find({
       userId: req.params.id,
     });
-    const userFavoriteCount = userFavorites[0]?.listingId?.length
+    const userFavoriteCount = userFavorites[0]?.listingId?.length || 0;
     const userFeaturedAdsCount = await Listings.find({
       userId: req.params.id,
       isFeatured: true,
@@ -148,17 +148,29 @@ export const getUserProfileInfo = async (req, res) => {
       userId: req.params.id,
       isFeatured: true,
     });
-    res
-      .status(200)
-      .json({
-        success: true,
-        userListingsCount,
-        userFavoriteCount,
-        userFeaturedAdsCount,
-        userListings,
-        userFavorite,
-        userFeaturedAds,
-      });
+    res.status(200).json({
+      success: true,
+      userListingsCount,
+      userFavoriteCount,
+      userFeaturedAdsCount,
+      userListings,
+      userFavorite,
+      userFeaturedAds,
+    });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+//update user
+
+export const userInfoData = async (req, res) => {
+  try {
+    const user = await User.findById(req.params.id);
+    res.status(200).json({
+      success: true,
+      data: user,
+    });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

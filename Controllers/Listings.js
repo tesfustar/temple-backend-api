@@ -46,7 +46,7 @@ export const getAllPaginatedListings = async (req, res) => {
     },
   };
   try {
-    await Listings.paginate({}, options, function (err, result) {
+    await Listings.paginate({isApproved:true}, options, function (err, result) {
       res.status(200).json(result);
     });
   } catch (error) {

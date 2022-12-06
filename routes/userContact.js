@@ -7,6 +7,6 @@ import {
   getOwnContactInfo
 } from "../Controllers/UserContact.js";
 
-router.post("/create", createSocialContactInfo);
-router.post("/find/:id", getOwnContactInfo);
+router.post("/create/:id", createSocialContactInfo);
+router.get("/find/:id", getOwnContactInfo);
 export default router;

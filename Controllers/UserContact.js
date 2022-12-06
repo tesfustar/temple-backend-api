@@ -4,8 +4,18 @@ import UserContact from "../Models/UserContact.js";
 export const createSocialContactInfo = async (req, res) => {
   const newUserContact = new UserContact(req.body);
   try {
-    const savedUserContact = await newUserContact.save();
-    res.status(201).send({ success: true, data: savedUserContact });
+    const oldInfo = await UserContact.findById(req.params.id);
+    if (oldInfo) {
+      const updateOldInfo = await UserContact.findByIdAndUpdate(
+        req.params.id,
+        { $set: req.body },
+        { new: true }
+      );
+      res.status(200).send({ success: true, data: updateOldInfo });
+    } else {
+      const savedUserContact = await newUserContact.save();
+      res.status(201).send({ success: true, data: savedUserContact });
+    }
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

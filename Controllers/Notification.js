@@ -79,6 +79,7 @@ export const getUnreadNotification = async (req, res) => {
   }
 };
 
+
 //mark as read notifications
 
 export const markAsReadNotification = async (req, res) => {
