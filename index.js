@@ -4,7 +4,7 @@ import cors from "cors";
 import dotenv from "dotenv";
 
 //routes
-import category from './routes/category.js'
+// import category from './routes/category.js'
 // import subCategory from './routes/subCategory.js'
 // import auth from './routes/auth.js'
 // import listings from './routes/listings.js'
@@ -28,7 +28,7 @@ app.use(cors());
 app.use(express.json());
 
 //end point apis
-app.use('/api/category',category)
+// app.use('/api/category',category)
 // app.use('/api/subcategory',subCategory)
 // app.use('/api/auth',auth)
 // app.use('/api/listings',listings)
