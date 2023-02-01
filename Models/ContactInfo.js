@@ -9,6 +9,7 @@ const contactInfoSchema = new mongoose.Schema(
     telegram: { type: String },
     facebook: { type: String },
     whatsapp: { type: String },
+   
   },
   { timestamps: true }
 );

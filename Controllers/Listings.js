@@ -2,6 +2,7 @@ import Listings from "../Models/Listings.js";
 import Notification from "../Models/Notification.js";
 import User from "../Models/User.js";
 import UserContact from "../Models/UserContact.js";
+import AdminContact from "../Models/AdminContact.js";
 //create listings
 export const createListing = async (req, res) => {
   const newListing = new Listings(req.body);
@@ -46,9 +47,13 @@ export const getAllPaginatedListings = async (req, res) => {
     },
   };
   try {
-    await Listings.paginate({isApproved:true}, options, function (err, result) {
-      res.status(200).json(result);
-    });
+    await Listings.paginate(
+      { isApproved: true },
+      options,
+      function (err, result) {
+        res.status(200).json(result);
+      }
+    );
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -103,6 +108,8 @@ export const getSingleListing = async (req, res) => {
       .populate("subCategory");
     if (!listing) res.status(400).json({ message: "listing not found" });
     const userContact = await UserContact.findOne({ userId: listing.userId });
+    const user = await User.findOne({isAdmin:true})
+    const adminContact = await AdminContact.findOne({userId:user._id})
     const relatedListings = await Listings.find({ category: listing.category });
     const findOne = relatedListings.filter(
       (item) => item.title !== listing.title
@@ -112,6 +119,7 @@ export const getSingleListing = async (req, res) => {
       data: listing,
       related: findOne,
       userContact: userContact,
+      adminContact:adminContact
     });
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -145,9 +153,11 @@ export const deleteOwnListing = async (req, res) => {
 //get featured listings for admin
 export const getAllFeaturedListingsForAdmin = async (req, res) => {
   try {
-    const featuredListings = await Listings.find({ isFeatured: true }).sort({
-      createdAt: -1,
-    });
+    const featuredListings = await Listings.find({ isFeatured: true })
+      .sort({
+        createdAt: -1,
+      })
+      .populate("category");
     res.status(200).send({ success: true, data: featuredListings });
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -260,16 +270,28 @@ export const filteredListings = async (req, res) => {
     query.title = { $regex: new RegExp(title), $options: "i" };
   }
   if (category) {
-    query.category = {  $eq: category };
+    query.category = { $eq: category };
   }
   if (min_price || max_price) {
     query.price = { $gte: min_price | 0, $lte: max_price || 20000000 };
   }
   try {
-    await Listings.paginate(query, options, function (err, result) {
-      res.status(200).json(result);
-    });
-    console.log(query);
+    await Listings.paginate(
+      {
+        isSoldOut: false,
+        price: { $gte: min_price | 0, $lte: max_price || 20000000 },
+        title: title
+          ? { $regex: new RegExp(title), $options: "i" }
+          : { $exists: true },
+        category: category ? { $eq: category } : { $exists: true },
+        subCategory: sub_category ? { $eq: sub_category } : { $exists: true }
+      },
+      options,
+      function (err, result) {
+        res.status(200).json(result);
+      }
+    );
+  
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
