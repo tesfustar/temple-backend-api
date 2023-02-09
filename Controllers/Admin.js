@@ -4,6 +4,8 @@ import Subcategory from "../Models/SubCategory.js";
 import Listings from "../Models/Listings.js";
 import User from "../Models/User.js";
 import Banner from "../Models/Banner.js";
+import featuredListings from "../Models/FeaturedListing.js";
+import FeaturedListings from "../Models/FeaturedListing.js";
 //dashboard
 export const getAllStatus = async (req, res) => {
   try {
@@ -20,6 +22,25 @@ export const getAllStatus = async (req, res) => {
     const featuredListings = await Listings.find({ isFeatured: true }).count();
     const soldProperty = await Listings.find({ isSoldOut: true }).count();
     const adBanners = await Banner.find().count();
+    const totalMoney = await FeaturedListings.aggregate([
+      {
+        $match: {
+          isAccepted: true,
+        },
+      },
+      {
+        $group: {
+          _id: null,
+          totalAmount: {
+            $sum: "$amountMoney",
+          },
+        },
+      },
+      {
+        $limit: 1,
+      },
+    ]);
+
     res.status(200).json({
       success: true,
       data: {
@@ -32,6 +53,7 @@ export const getAllStatus = async (req, res) => {
         featuredListings,
         soldProperty: soldProperty,
         adBanners,
+        money: totalMoney,
       },
     });
   } catch (error) {
@@ -107,6 +129,17 @@ export const getOwnContactInfo = async (req, res) => {
   try {
     const myContactInfo = await AdminContact.findOne({ userId: req.params.id });
     res.status(200).send({ success: true, data: myContactInfo });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+//send amount to user
+export const getFeaturedAmountInfo = async (req, res) => {
+  try {
+    const user = await User.findOne({ isAdmin: true });
+    const featuredAmountInfo = await AdminContact.findOne({ userId: user._id });
+    res.status(200).send({ success: true, data: featuredAmountInfo });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

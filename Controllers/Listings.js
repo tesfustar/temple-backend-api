@@ -265,16 +265,6 @@ export const filteredListings = async (req, res) => {
       locale: "en",
     },
   };
-  let query = {};
-  if (title) {
-    query.title = { $regex: new RegExp(title), $options: "i" };
-  }
-  if (category) {
-    query.category = { $eq: category };
-  }
-  if (min_price || max_price) {
-    query.price = { $gte: min_price | 0, $lte: max_price || 20000000 };
-  }
   try {
     await Listings.paginate(
       {

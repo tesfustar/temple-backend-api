@@ -17,7 +17,7 @@ import {
 //   } from "../Middleware/authorization.js";
 
 router.post("/create", createFeaturedListingAd);
-router.put("/accept/:id", acceptFeaturedListingRequest);
+router.get("/accept/:id", acceptFeaturedListingRequest);
 router.put("/reject/:id", rejectFeaturedListingRequest);
 router.get("/admin/all", getAllListingRequest);  //for admin
 router.get("/user/all/:id", getMyListingRequest);
