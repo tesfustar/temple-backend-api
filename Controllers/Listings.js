@@ -74,7 +74,7 @@ export const getListings = async (req, res) => {
 //get unaccepted listing request
 export const getUnacceptedListings = async (req, res) => {
   try {
-    const unacceptedListings = await Listings.find({ isApproved: false })
+    const unacceptedListings = await Listings.find({ isApproved: false,isRejected:false })
       .sort({ createdAt: -1 })
       .populate("userId")
       .populate("category");

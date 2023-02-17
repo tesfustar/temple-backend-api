@@ -81,22 +81,15 @@ export const acceptFeaturedListingRequest = async (req, res) => {
 //reject listing request
 export const rejectFeaturedListingRequest = async (req, res) => {
   try {
-    const request = FeaturedListings.findById(req.params.id);
+    const request = await FeaturedListings.findOne({listingId:req.params.id});
     if (!request) return res.status(400).json({ message: "request not found" });
-    const updatedFeaturedListingAd = await FeaturedListings.findByIdAndUpdate(
-      req.params.id,
-      {
-        isRejected: true,
-        isFeatured: true,
-      },
-      { new: true }
-    );
+    const updatedFeaturedListingAd = await FeaturedListings.findOneAndDelete({listingId:req.params.id});
     const listingRequest = await Listings.findByIdAndUpdate(
       req.params.id,
       { isRequestedForAd: false },
       { new: true }
     );
-    const featuredListingNotification = new Notification({
+    const featuredListingNotification =  new Notification({
       userId: request.userId,
       title: "featured listing",
       message: `Your featured listing request is rejected!`,
