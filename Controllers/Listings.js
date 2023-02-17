@@ -188,7 +188,7 @@ export const acceptListingRequest = async (req, res) => {
     const listingRequestNotification = new Notification({
       userId: request.userId,
       title: "congratulation",
-      message: `Your listing request for ${req.body.title} is accepted.`,
+      message: `Your listing request for ${request.title} is accepted.`,
     });
     const saveListingNotification = await listingRequestNotification.save();
     res.status(200).send({
@@ -213,8 +213,8 @@ export const rejectListingRequest = async (req, res) => {
     );
     const listingRequestNotification = new Notification({
       userId: request.userId,
-      title: "congratulation",
-      message: `Your listing request for ${req.body.title} is rejected please meet the requirement.`,
+      title: "oops",
+      message: `Your listing request for ${request.title} is rejected please meet the requirement.`,
     });
     const saveListingNotification = await listingRequestNotification.save();
     res.status(200).send({
@@ -269,6 +269,8 @@ export const filteredListings = async (req, res) => {
     await Listings.paginate(
       {
         isSoldOut: false,
+        isAccepted:true,
+        isRejected:false,
         price: { $gte: min_price | 0, $lte: max_price || 20000000 },
         title: title
           ? { $regex: new RegExp(title), $options: "i" }

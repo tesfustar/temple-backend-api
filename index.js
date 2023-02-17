@@ -34,7 +34,7 @@ app.use('/api/subcategory',subCategory)
 app.use('/api/auth',auth)
 app.use('/api/listings',listings)
 app.use('/api/admin',admin)
-app.use('/api/users',user);
+app.use('/api/users',user)
 app.use('/api/notification',notification);
 app.use('/api/banks',banks);
 app.use('/api/favorite',favorite);

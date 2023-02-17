@@ -46,10 +46,10 @@ export const createFeaturedListingAd = async (req, res) => {
 //accept featured listing request
 export const acceptFeaturedListingRequest = async (req, res) => {
   try {
-    const request = await FeaturedListings.findById(req.params.id);
+    const request = await FeaturedListings.findOne({listingId:req.params.id});
     if (!request) return res.status(400).json({ message: "request not found" });
     const updatedFeaturedListingAd = await FeaturedListings.findByIdAndUpdate(
-      req.params.id,
+      request._id,
       {
         isAccepted: true,
       },
