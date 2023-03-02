@@ -269,8 +269,7 @@ export const filteredListings = async (req, res) => {
     await Listings.paginate(
       {
         isSoldOut: false,
-        isAccepted:true,
-        isRejected:false,
+        isApproved: true ,
         price: { $gte: min_price | 0, $lte: max_price || 20000000 },
         title: title
           ? { $regex: new RegExp(title), $options: "i" }
